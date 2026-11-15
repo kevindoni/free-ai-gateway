@@ -1,0 +1,19 @@
+{
+  "lockfileVersion": 2,
+  "configVersion": 0,
+  "workspaces": {
+    "": {
+      "name": "bridge",
+      "dependencies": {
+        "token-free-gateway": "github:andeya/token-free-gateway",
+      },
+    },
+  },
+  "packages": {
+    "playwright-core": ["playwright-core@1.65.1", "", { "bin": "cli.js" }, "sha512-hqPpz7blSMPxWVdoeE1yiBSzXsKiVOd2k+kjCvmUywD2GPO2Dd9HfcWnq9NN0GHbNZDFgZ9JfBFr+X5/BLo0qw=="],
+
+    "token-free-gateway": ["token-free-gateway@github:andeya/token-free-gateway#769399b720f2826038d91df4cb6b5236735c220c", { "dependencies": { "playwright-core": "^1.59.1" }, "peerDependencies": { "typescript": "^5" } }, "769399b720f2826038d91df4cb6b5236735c220c", "sha512-00lExTrioTdvW0Zw8tRkxJY2uf6thFiBQ9M0UwK2hz4EXxqAFPAhdodsHDARP8eQfbJ2NnbI/JsYYwhNZJsPSg=="],
+
+    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+  }
+}

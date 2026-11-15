@@ -68,6 +68,23 @@ const SEEDS: SeedDef[] = [
     priority: 200,
     type: 'keyless',
   },
+  {
+    name: 'ovhcloud',
+    envKey: '__KEYLESS__',
+    baseUrl: 'https://oai.endpoints.kepler.ai.cloud.ovh.net/v1',
+    models: ['Qwen3.8-27B', 'gpt-oss-20b', 'Mistral-Small-3.2-24B-Instruct-2506'],
+    priority: 210,
+    type: 'keyless',
+    rateLimits: { rpm: 2, rpd: 2000 },
+  },
+  {
+    name: 'llm7',
+    envKey: '__KEYLESS__',
+    baseUrl: 'https://api.llm7.io/v1',
+    models: ['DeepSeek-V4-Flash-0731', 'L3-8B-Lunaris-v1-Turbo'],
+    priority: 220,
+    type: 'keyless',
+  },
 ];
 
 export function seedFromEnv(): void {
@@ -90,4 +107,27 @@ export function seedFromEnv(): void {
     console.log(`[seed] Registered provider "${seed.name}"`);
   }
   if (added === 0) console.log('[seed] No new providers to register');
+  void seedWebbridge();
+}
+
+// Register the local browser-bridge (token-free-gateway on :3456) only when it is reachable.
+async function seedWebbridge(): Promise<void> {
+  if (findProvider('webbridge-tfg')) return;
+  try {
+    const resp = await fetch('http://127.0.0.1:3456/v1/models', { signal: AbortSignal.timeout(3000) });
+    if (!resp.ok) return;
+    const data = (await resp.json()) as { data?: Array<{ id: string }> };
+    const models = (data.data ?? []).map((m) => m.id).slice(0, 50);
+    registerProvider({
+      name: 'webbridge-tfg',
+      baseUrl: 'http://127.0.0.1:3456/v1',
+      apiKey: process.env.TFG_API_KEY || '',
+      models: models.length > 0 ? models : ['auto'],
+      priority: 250,
+      type: 'gateway',
+    });
+    console.log(`[seed] Registered webbridge-tfg (${models.length} web models)`);
+  } catch {
+    console.log('[seed] webbridge-tfg not running — skipped (start with: bun bridge/node_modules/token-free-gateway/index.ts serve)');
+  }
 }
