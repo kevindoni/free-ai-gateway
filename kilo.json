@@ -14,31 +14,5 @@
       "enabled": true,
       "timeout": 300000
     }
-  },
-  "provider": {
-    "openai": {
-      "options": {
-        "apiKey": "local",
-        "baseURL": "http://127.0.0.1:8080/v1",
-        "timeout": 300000
-      },
-      "models": {
-        "auto": { "name": "Free Auto (failover 103 models)" },
-        "claude-sonnet-4-6": { "name": "Claude Sonnet 4.6 (web bridge)" },
-        "claude-opus-4-6": { "name": "Claude Opus 4.6 (web bridge)" },
-        "claude-haiku-4-6": { "name": "Claude Haiku 4.6 (web bridge)" },
-        "gpt-4-turbo": { "name": "GPT-4 Turbo (web bridge)" },
-        "gpt-4": { "name": "GPT-4 (web bridge)" },
-        "deepseek-chat": { "name": "DeepSeek Chat (web bridge)" },
-        "deepseek-reasoner": { "name": "DeepSeek Reasoner (web bridge)" },
-        "gemini-pro": { "name": "Gemini Pro (web bridge)" },
-        "glm-4-plus": { "name": "GLM-4 Plus (web bridge)" },
-        "qwen3.5-plus": { "name": "Qwen 3.5 Plus (web bridge)" },
-        "nvidia/nemotron-3-ultra-550b-a55b:free": { "name": "Nemotron 3 Ultra 550B (OpenRouter free)" },
-        "cohere/north-mini-code:free": { "name": "North Mini Code (OpenRouter free)" },
-        "baidu/ernie-5.5-flash-preview:free": { "name": "ERNIE 5.5 Flash (OpenRouter free)" },
-        "google/gemma-4-31b-it:free": { "name": "Gemma 4 31B (OpenRouter free)" }
-      }
-    }
   }
 }
