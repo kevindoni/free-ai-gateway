@@ -6,6 +6,19 @@ const DEFAULT_INTERVAL_MS = 3600000;
 const REQUEST_TIMEOUT_MS = 15000;
 const MAX_MODELS = 100;
 const NON_CHAT_PATTERN = /embed|whisper|tts|rerank|guard|image|video|audio|moderation/i;
+// Known-working models float to the front of refreshed catalogs so that
+// `pickModelForProvider` (models[0]) does not pick an unavailable one.
+const PREFERRED_MODEL_ORDER = [
+  'deepseek-chat', 'deepseek-reasoner', 'gpt-4-turbo', 'gpt-4',
+  'gemini-pro', 'glm-4-plus', 'qwen3.5-plus',
+  'claude-sonnet-4-6', 'claude-haiku-4-6', 'claude-opus-4-6',
+];
+
+function orderPreferred(models: string[]): string[] {
+  const head = PREFERRED_MODEL_ORDER.filter((m) => models.includes(m));
+  const tail = models.filter((m) => !PREFERRED_MODEL_ORDER.includes(m));
+  return [...head, ...tail];
+}
 
 let refreshTimer: NodeJS.Timeout | null = null;
 
@@ -71,7 +84,7 @@ export async function refreshCatalogFor(provider: Provider): Promise<CatalogRefr
 
     if (resp.status !== 200) return { ok: false, count: 0, models: [] };
 
-    const models = toChatModels(extractRawIds(resp.data));
+    const models = orderPreferred(toChatModels(extractRawIds(resp.data)));
     if (models.length === 0) return { ok: false, count: 0, models: [] };
 
     const fresh = getProviderByName(provider.name);

@@ -36,8 +36,20 @@ const SEEDS: SeedDef[] = [
     name: 'openrouter',
     envKey: 'OPENROUTER_API_KEY',
     baseUrl: 'https://openrouter.ai/api/v1',
-    models: ['openrouter/free'],
-    priority: 30,
+    models: [
+      'openrouter/free',
+      'nvidia/nemotron-3-ultra-550b-a55b:free',
+      'nvidia/nemotron-3.5-lightning:free',
+      'nvidia/nemotron-3.5-super-vl:free',
+      'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',
+      'cohere/north-mini-code:free',
+      'baidu/ernie-5.5-flash-preview:free',
+      'google/gemma-4-31b-it:free',
+      'google/gemma-4-26b-a4b-it:free',
+      'inclusionai/ling-3.2-flash:free',
+      'dots-studio/dots-3-note-preview:free',
+    ],
+    priority: 100,
     type: 'gateway',
     rateLimits: { rpm: 20, rpd: 50 },
   },
@@ -123,7 +135,7 @@ async function seedWebbridge(): Promise<void> {
       baseUrl: 'http://127.0.0.1:3456/v1',
       apiKey: process.env.TFG_API_KEY || '',
       models: models.length > 0 ? models : ['auto'],
-      priority: 250,
+      priority: 10, // browser bridge = primary route
       type: 'gateway',
     });
     console.log(`[seed] Registered webbridge-tfg (${models.length} web models)`);
