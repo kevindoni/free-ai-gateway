@@ -1,0 +1,29 @@
+services:
+  gateway:
+    build: .
+    image: free-ai-gateway:local
+    container_name: free-ai-gateway
+    ports:
+      - "8080:8080"
+    env_file:
+      # Optional: .env may be absent (Compose v2.24+ supports required:false;
+      # on older Compose replace these two lines with "- .env").
+      - path: .env
+        required: false
+    environment:
+      # Must win over env_file: .env.example defaults GATEWAY_HOST=127.0.0.1,
+      # which would make the published port unreachable inside the container.
+      GATEWAY_HOST: 0.0.0.0
+    volumes:
+      - gateway-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      # alpine ships busybox wget, not curl -> wget --spider, install nothing
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/v1/models"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  gateway-data:
