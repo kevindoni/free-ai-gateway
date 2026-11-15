@@ -2,8 +2,7 @@
 // Standalone health check script — used by GitHub Actions cron
 // Checks all seed providers against their /models endpoint and prints
 // a GitHub Actions-friendly status summary. Exits 0 always (report only).
-
-import 'dotenv/config';
+// Keys come from environment (workflow env or shell). No deps beyond tsx.
 
 const CHECKS = [
   { name: 'groq', url: 'https://api.groq.com/openai/v1/models', envKey: 'GROQ_API_KEY' },
