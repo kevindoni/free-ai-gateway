@@ -1,0 +1,82 @@
+diff --git a/node_modules/token-free-gateway/.bun-tag b/node_modules/token-free-gateway/.bun-tag
+new file mode 100644
+index 0000000..9b24079
+--- /dev/null
++++ b/node_modules/token-free-gateway/.bun-tag
+@@ -0,0 +1 @@
++769399b720f2826038d91df4cb6b5236735c220c
+\ No newline at end of file
+diff --git a/node_modules/token-free-gateway/.gitignore b/node_modules/token-free-gateway/.gitignore
+new file mode 100644
+index 0000000..80d61dd
+--- /dev/null
++++ b/node_modules/token-free-gateway/.gitignore
+@@ -0,0 +1,44 @@
++# dependencies (bun install)
++node_modules
++
++# output
++out
++dist
++/npm
++*.tgz
++/token-free-gateway
++
++# dev scripts
++generate_git_history.py
++
++# code coverage
++coverage
++*.lcov
++
++# logs
++logs
++_.log
++report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
++
++# dotenv environment variable files
++.env
++.env.development.local
++.env.test.local
++.env.production.local
++.env.local
++
++# caches
++.eslintcache
++.cache
++*.tsbuildinfo
++
++# IntelliJ based IDEs
++.idea
++
++# Finder (MacOS) folder config
++.DS_Store
++
++# IDE
++.vscode
++.cursor
++.cursorrulestsc.log
+diff --git a/node_modules/token-free-gateway/src/providers/deepseek/client.ts b/node_modules/token-free-gateway/src/providers/deepseek/client.ts
+index 490d0d2..55d1b89 100644
+--- a/node_modules/token-free-gateway/src/providers/deepseek/client.ts
++++ b/node_modules/token-free-gateway/src/providers/deepseek/client.ts
+@@ -280,11 +280,16 @@ export class DeepSeekWebClient extends BaseApiClient<DeepSeekWebCredentials> {
+ 		if (!evalResult.ok)
+ 			throw new Error(`Failed to create chat session: ${evalResult.status} ${evalResult.error}`);
+ 		const data = evalResult.data as DeepSeekChatSessionResponse;
+-		const sessionId = data.data?.biz_data?.id || data.data?.biz_data?.chat_session_id || "";
++		// DeepSeek API now nests the session under biz_data.chat_session.{id,...}
++		const sessionId =
++			data.data?.biz_data?.chat_session?.id ||
++			data.data?.biz_data?.id ||
++			data.data?.biz_data?.chat_session_id ||
++			"";
+ 		return {
+ 			biz_id: data.data?.biz_data?.biz_id || "",
+-			title: data.data?.biz_data?.title || "",
+-			...data.data?.biz_data,
++			title: data.data?.biz_data?.chat_session?.title || data.data?.biz_data?.title || "",
++			...(data.data?.biz_data?.chat_session ?? data.data?.biz_data),
+ 			chat_session_id: sessionId,
+ 		};
+ 	}
